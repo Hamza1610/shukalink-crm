@@ -1,6 +1,7 @@
 # app/models/conversation.py
-from datetime import datetime
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, JSONB, Boolean
+from datetime import datetime, timedelta
+from uuid import uuid4
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, JSONB, Boolean, ARRAY
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 from enum import Enum as PyEnum
@@ -90,6 +91,13 @@ class ChatSession(Base):
 
 # app/models/conversation.py (continued)
 
+class AdvisoryType(PyEnum):
+    STORAGE = "storage"
+    PEST_CONTROL = "pest_control"
+    MARKET_TIMING = "market_timing"
+    PRICE_ALERT = "price_alert"
+    WEATHER_ALERT = "weather_alert"
+
 class AdvisoryRecord(Base):
     __tablename__ = "advisory_records"
 
@@ -98,7 +106,7 @@ class AdvisoryRecord(Base):
     produce_listing_id = Column(String, ForeignKey("produce_listings.id"), nullable=True)
     
     # Advisory type
-    advisory_type = Column(Enum("storage", "pest_control", "market_timing", "price_alert", "weather_alert"), nullable=False)
+    advisory_type = Column(Enum(AdvisoryType), nullable=False)
     crop_type = Column(Enum(CropType), nullable=True)
     
     # Content

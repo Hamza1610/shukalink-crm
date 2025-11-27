@@ -1,5 +1,6 @@
 # app/models/transaction.py
-from datetime import datetime
+from datetime import datetime, timedelta
+from uuid import uuid4
 from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Enum, Boolean, JSONB
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
@@ -20,6 +21,12 @@ class PaymentMethod(PyEnum):
     BANK_TRANSFER = "bank_transfer"
     CASH_ON_DELIVERY = "cash_on_delivery"
     MOBILE_MONEY = "mobile_money"
+
+class PaymentStatus(PyEnum):
+    PENDING = "pending"
+    SUCCESS = "success"
+    FAILED = "failed"
+    REFUNDED = "refunded"
 
 class Transaction(Base):
     __tablename__ = "transactions"
@@ -76,7 +83,7 @@ class PaymentRecord(Base):
     reference = Column(String, unique=True, nullable=False)  # Paystack reference
     
     # Status tracking
-    status = Column(Enum("pending", "success", "failed", "refunded"), default="pending")
+    status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING)
     created_at = Column(DateTime, default=datetime.utcnow)
     confirmed_at = Column(DateTime, nullable=True)
     

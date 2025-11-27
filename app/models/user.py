@@ -1,7 +1,9 @@
 # app/models/user.py
 from typing import Optional, List
 from datetime import datetime
-from sqlalchemy import Column, String, Enum, DateTime, Text, Float, ForeignKey
+from uuid import uuid4
+from sqlalchemy import Column, String, Enum, DateTime, Text, Float, ForeignKey, Boolean, ARRAY, Integer
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
 from enum import Enum as PyEnum
@@ -67,6 +69,12 @@ class FarmerProfile(Base):
     # Relationships
     user = relationship("User", back_populates="farmer_profile")
 
+class BuyerType(PyEnum):
+    TRADER = "trader"
+    AGGREGATOR = "aggregator"
+    PROCESSOR = "processor"
+    RETAILER = "retailer"
+
 class BuyerProfile(Base):
     __tablename__ = "buyer_profiles"
 
@@ -75,7 +83,7 @@ class BuyerProfile(Base):
     
     # Business Data
     business_name = Column(String, nullable=True)
-    buyer_type = Column(Enum("trader", "aggregator", "processor", "retailer"), default="trader")
+    buyer_type = Column(Enum(BuyerType), default=BuyerType.TRADER)
     typical_purchase_volume_kg = Column(Integer, nullable=True)
     preferred_crops = Column(ARRAY(String), default=list)
     service_radius_km = Column(Integer, default=50)

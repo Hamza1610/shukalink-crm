@@ -1,7 +1,9 @@
 # app/models/produce.py
 from datetime import datetime, timedelta
-from sqlalchemy import Column, String, Float, DateTime, Integer, ForeignKey, Boolean, Enum, JSONB
+from uuid import uuid4
+from sqlalchemy import Column, String, Float, DateTime, Integer, ForeignKey, Boolean, Enum, JSONB, Text
 from sqlalchemy.orm import relationship
+from geoalchemy2 import Geometry
 from app.db.base_class import Base
 from enum import Enum as PyEnum
 
@@ -19,6 +21,13 @@ class QualityGrade(PyEnum):
     GOOD = "good"        # Minor blemishes, mostly firm
     STANDARD = "standard" # Some soft spots but usable
     POOR = "poor"        # Significant spoilage, urgent sale needed
+
+class ListingStatus(PyEnum):
+    AVAILABLE = "available"
+    MATCHED = "matched"
+    SOLD = "sold"
+    EXPIRED = "expired"
+    CANCELLED = "cancelled"
 
 class ProduceListing(Base):
     __tablename__ = "produce_listings"
@@ -39,7 +48,7 @@ class ProduceListing(Base):
     shelf_life_days = Column(Integer, nullable=True)  # Estimated remaining shelf life
     
     # Status tracking
-    status = Column(Enum("available", "matched", "sold", "expired", "cancelled"), default="available")
+    status = Column(Enum(ListingStatus), default=ListingStatus.AVAILABLE)
     created_at = Column(DateTime, default=datetime.utcnow)
     expires_at = Column(DateTime, nullable=False)  # Auto-calculated based on crop type + shelf life
     

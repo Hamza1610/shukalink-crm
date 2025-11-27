@@ -1,6 +1,7 @@
 # app/models/logistics.py
 from datetime import datetime, timedelta
-from sqlalchemy import Column, String, DateTime, Float, ForeignKey, Enum, Boolean, JSONB
+from uuid import uuid4
+from sqlalchemy import Column, String, DateTime, Float, ForeignKey, Enum, Boolean, JSONB, Text
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
 from app.db.base_class import Base
