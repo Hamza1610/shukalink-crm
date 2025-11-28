@@ -3,7 +3,7 @@ from typing import Optional, List
 from datetime import datetime
 from uuid import uuid4
 from sqlalchemy import Column, String, Enum, DateTime, Text, Float, ForeignKey, Boolean, ARRAY, Integer
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
 from enum import Enum as PyEnum
@@ -59,12 +59,12 @@ class FarmerProfile(Base):
     # Farm Data
     farm_size_hectares = Column(Float, nullable=True)
     primary_crops = Column(ARRAY(String), default=list)
-    average_yield_kg = Column(JSONB, nullable=True)  # Per crop type
+    average_yield_kg = Column(JSON, nullable=True)  # Per crop type
     storage_capacity_kg = Column(Integer, nullable=True)
     storage_type = Column(String, nullable=True)  # "mud_silo", "plastic_bins", etc.
     
     # Economic Data
-    typical_price_range = Column(JSONB, nullable=True)  # {"tomatoes": {"min": 500, "max": 1500}}
+    typical_price_range = Column(JSON, nullable=True)  # {"tomatoes": {"min": 500, "max": 1500}}
     
     # Relationships
     user = relationship("User", back_populates="farmer_profile")

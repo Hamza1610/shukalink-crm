@@ -1,7 +1,7 @@
 # app/models/conversation.py
 from datetime import datetime, timedelta
 from uuid import uuid4
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, Integer, Float, JSONB, Boolean, ARRAY
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, Integer, Float, JSON, Boolean, ARRAY
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 from enum import Enum as PyEnum
@@ -59,7 +59,7 @@ class VoiceMessage(Base):
     
     # AI context
     identified_intent = Column(Enum(IntentCategory), default=IntentCategory.UNKNOWN)
-    entities_extracted = Column(JSONB, nullable=True)  # {"crop_type": "tomatoes", "quantity": "50kg"}
+    entities_extracted = Column(JSON, nullable=True)  # {"crop_type": "tomatoes", "quantity": "50kg"}
     
     # Metadata
     source = Column(Enum(MessageSource), default=MessageSource.WHATSAPP)
@@ -78,7 +78,7 @@ class ChatSession(Base):
     
     # Session context
     session_type = Column(Enum("listing_creation", "buyer_search", "advisory", "payment", "logistics"), default="general_inquiry")
-    context_data = Column(JSONB, nullable=True)  # Current state of multi-step conversation
+    context_data = Column(JSON, nullable=True)  # Current state of multi-step conversation
     
     # Messages in session
     user_message = Column(Text, nullable=False)
@@ -124,7 +124,7 @@ class AdvisoryRecord(Base):
     confidence_level = Column(Float, nullable=True)  # 0.0-1.0
     
     # Context
-    environmental_context = Column(JSONB, nullable=True)  # {"temperature": 32, "humidity": 65, "season": "dry"}
+    environmental_context = Column(JSON, nullable=True)  # {"temperature": 32, "humidity": 65, "season": "dry"}
     storage_context = Column(String, nullable=True)  # "mud_silo", "plastic_bins"
     
     # Effectiveness tracking

@@ -1,7 +1,7 @@
 # app/models/transaction.py
 from datetime import datetime, timedelta
 from uuid import uuid4
-from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Enum, Boolean, JSONB
+from sqlalchemy import Column, String, Float, DateTime, ForeignKey, Enum, Boolean, JSON
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 from enum import Enum as PyEnum
@@ -88,7 +88,7 @@ class PaymentRecord(Base):
     confirmed_at = Column(DateTime, nullable=True)
     
     # Paystack specific data
-    paystack_data = Column(JSONB, nullable=True)  # Raw webhook data
+    paystack_data = Column(JSON, nullable=True)  # Raw webhook data
     
     # Relationships
     transaction = relationship("Transaction", back_populates="payment_records")

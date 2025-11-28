@@ -51,10 +51,10 @@ class UserResponse(BaseModel):
 class FarmerProfileBase(BaseModel):
     farm_size_hectares: Optional[float] = None
     primary_crops: Optional[List[str]] = None
-    average_yield_kg: Optional[dict] = None  # JSONB field
+    average_yield_kg: Optional[dict] = None  # JSON field
     storage_capacity_kg: Optional[int] = None
     storage_type: Optional[str] = None
-    typical_price_range: Optional[dict] = None  # JSONB field
+    typical_price_range: Optional[dict] = None  # JSON field
 
 
 class FarmerProfileCreate(FarmerProfileBase):
