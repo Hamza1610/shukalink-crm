@@ -1,7 +1,8 @@
 # app/models/conversation.py
 from datetime import datetime, timedelta
 from uuid import uuid4
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, JSONB, Boolean, ARRAY
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, Boolean, ARRAY
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 from enum import Enum as PyEnum
