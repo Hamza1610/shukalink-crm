@@ -38,6 +38,16 @@ class User(UserBase):
         from_attributes = True
 
 
+class UserResponse(BaseModel):
+    id: str
+    phone_number: str
+    user_type: UserType
+    language_preference: Optional[LanguagePreference] = None
+
+    class Config:
+        from_attributes = True
+
+
 class FarmerProfileBase(BaseModel):
     farm_size_hectares: Optional[float] = None
     primary_crops: Optional[List[str]] = None
