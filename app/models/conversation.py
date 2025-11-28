@@ -1,7 +1,7 @@
 # app/models/conversation.py
 from datetime import datetime, timedelta
 from uuid import uuid4
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, JSONB, Boolean, ARRAY
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, Integer, Float, JSONB, Boolean, ARRAY
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 from enum import Enum as PyEnum
@@ -31,6 +31,15 @@ class IntentCategory(PyEnum):
     GENERAL_INQUIRY = "general_inquiry"
     UNKNOWN = "unknown"
 
+class CropType(PyEnum):
+    TOMATOES = "tomatoes"
+    ONIONS = "onions"
+    PEPPERS = "peppers"
+    YAMS = "yams"
+    MAIZE = "maize"
+    RICE = "rice"
+    # Add more as needed for MVP
+    
 class VoiceMessage(Base):
     __tablename__ = "voice_messages"
 

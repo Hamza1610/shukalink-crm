@@ -1,7 +1,7 @@
 # app/models/notification.py
 from datetime import datetime
 from uuid import uuid4
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Enum, Boolean
+from sqlalchemy import Column, String, Text, DateTime, ForeignKey, Integer, Enum, Boolean
 from sqlalchemy.orm import relationship
 from app.db.base_class import Base
 from enum import Enum as PyEnum

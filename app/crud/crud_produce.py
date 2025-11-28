@@ -2,7 +2,7 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.produce import ProduceListing
-from app.schemas.produce import ProduceListingCreate, ProduceListingUpdate
+from app.schemas.transaction import ProduceListingCreate, ProduceListingUpdate
 
 
 def create_produce_listing(db: Session, produce_listing: ProduceListingCreate, farmer_id: str) -> ProduceListing:
