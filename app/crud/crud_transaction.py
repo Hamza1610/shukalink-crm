@@ -2,7 +2,8 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.transaction import Transaction, PaymentRecord
-from app.schemas.transaction import TransactionCreate, TransactionUpdate, PaymentRecordCreate, PaymentRecordUpdate
+from app.schemas.transaction import TransactionCreate, TransactionUpdate
+from app.schemas.payment import PaymentRecordCreate, PaymentRecordUpdate
 
 
 def create_transaction(db: Session, transaction: TransactionCreate) -> Transaction:
