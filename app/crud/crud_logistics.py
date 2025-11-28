@@ -1,4 +1,3 @@
-# app/crud/crud_logistics.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.logistics import LogisticsRequest

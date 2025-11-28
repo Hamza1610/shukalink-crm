@@ -1,4 +1,3 @@
-# app/crud/crud_conversation.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.conversation import VoiceMessage, ChatSession, AdvisoryRecord

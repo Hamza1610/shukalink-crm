@@ -1,4 +1,3 @@
-# app/crud/crud_produce.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.produce import ProduceListing
