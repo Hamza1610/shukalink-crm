@@ -15,6 +15,26 @@ class LogisticsStatus(Enum):
     FAILED = "failed"                # Delivery failed
 
 
+class LogisticsRequestCreate(BaseModel):
+    transaction_id: str
+    pickup_address: str
+    delivery_address: str
+    pickup_datetime: Optional[datetime] = None
+    special_instructions: Optional[str] = None
+    vehicle_type: Optional[str] = "motorcycle"  # motorcycle, truck, etc.
+    requester_id: Optional[str] = None  # Will be set by the system
+
+
+class LogisticsRequestUpdate(BaseModel):
+    pickup_address: Optional[str] = None
+    delivery_address: Optional[str] = None
+    pickup_datetime: Optional[datetime] = None
+    special_instructions: Optional[str] = None
+    vehicle_type: Optional[str] = None
+    requester_id: Optional[str] = None
+    status: Optional[LogisticsStatus] = None
+
+
 class LogisticsRequest(BaseModel):
     transaction_id: str
     pickup_address: str
