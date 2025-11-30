@@ -48,6 +48,7 @@ async def whatsapp_webhook(request: Request):
     body = form_data.get("Body", "")
     profile_name = form_data.get("ProfileName", "")
     media_url = form_data.get("MediaUrl0", "")
+    media_content_type = form_data.get("MediaContentType0", "")
     
     # Verify Twilio signature (in production)
     # For now, we'll skip this for development
@@ -74,7 +75,7 @@ async def whatsapp_webhook(request: Request):
         
         # Process the message with WhatsApp service
         whatsapp_service = WhatsAppService()
-        response_message = whatsapp_service.process_message(user, body, media_url)
+        response_message = whatsapp_service.process_message(user, body, media_url, media_content_type)
         
         return create_twilio_response(response_message)
     finally:
