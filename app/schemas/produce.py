@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 from enum import Enum
 
@@ -73,3 +73,18 @@ class ProduceListingResponse(BaseModel):
     expires_at: datetime
     voice_message_id: Optional[str] = None
     transcription: Optional[str] = None
+
+
+class ProduceSearch(BaseModel):
+    crop_type: Optional[str] = None
+    min_quantity: Optional[float] = None
+    max_price: Optional[float] = None
+    location: Optional[str] = None
+    radius_km: Optional[int] = 25
+    quality_grade: Optional[QualityGrade] = None
+
+
+# Aliases for backward compatibility with endpoints
+ProduceCreate = ProduceListingCreate
+ProduceResponse = ProduceListingResponse
+ProduceUpdate = ProduceListingUpdate
