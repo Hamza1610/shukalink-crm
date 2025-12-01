@@ -4,7 +4,7 @@ from app.db.session import SessionLocal
 from app.models.user import User, UserType
 from app.api.deps import get_current_user, get_db
 from app.schemas.user import UserResponse
-from app.crud import crud_user
+from app.crud import get_users, get_user, get_user_by_phone, create_user, delete_user, update_user
 from app.models.produce import ProduceListing
 from app.models.transaction import Transaction
 from app.models.notification import Notification
@@ -35,11 +35,11 @@ def get_all_users(
     """
     Get all users (Admin only)
     """
-    users = crud_user.get_multi(db, skip=skip, limit=limit)
+    users = get_users(db, skip=skip, limit=limit)
     return users
 
 @router.get("/users/{user_id}", response_model=UserResponse)
-def get_user(
+def get_user_by_id(
     user_id: str,
     current_user: User = Depends(require_admin),
     db=Depends(get_db)
@@ -47,7 +47,9 @@ def get_user(
     """
     Get a specific user by ID (Admin only)
     """
-    user = crud_user.get(db, id=user_id)
+    print("Userid: ", user_id, "Current_user: ", current_user)
+
+    user = get_user(db, user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -65,7 +67,7 @@ def update_user_type(
     """
     Update user type (Admin only)
     """
-    user = crud_user.get(db, id=user_id)
+    user = get_user(db, user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -81,7 +83,7 @@ def update_user_type(
     return {"message": f"User type updated to {user_type.value}", "user": UserResponse.from_orm(user)}
 
 @router.delete("/users/{user_id}")
-def delete_user(
+def delete_user_by_id(
     user_id: str,
     current_user: User = Depends(require_admin),
     db=Depends(get_db)
@@ -89,7 +91,7 @@ def delete_user(
     """
     Delete a user (Admin only)
     """
-    user = crud_user.get(db, id=user_id)
+    user = get_user(db, user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -98,7 +100,7 @@ def delete_user(
     
     # For now, we'll just mark as deleted rather than hard delete
     # In a real application, you might want to implement soft delete
-    crud_user.remove(db, id=user_id)
+    delete_user(db, user_id)
     
     return {"message": "User deleted successfully"}
 

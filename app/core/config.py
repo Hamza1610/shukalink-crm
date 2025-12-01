@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = "your-secret-key-here"
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     DATABASE_URL: str = "postgresql+psycopg2://postgres:hamza@localhost:5432/AgriLink"
     # DATABASE_URL: str = "postgresql://postgres:@p7Mn$FNCPmw#r6@db.gpyizvftxzuktyynhpei.supabase.co:5432/postgres"
     WHATSAPP_ACCOUNT_SID: Optional[str] = None

@@ -39,9 +39,10 @@ def request_otp(otp_request: OTPRequest, db=Depends(get_db)):
         # Create new user
         user_data = {
             "phone_number": otp_request.phone_number,
+            "user_type": otp_request.user_type,
             "language_preference": otp_request.language_preference or "english"
         }
-        user = create_user(db, obj_in=user_data)
+        user = create_user(db, user=user_data)
     
     # In real implementation, send OTP via Twilio WhatsApp API
     print(f"OTP {otp_code} generated for {otp_request.phone_number}")
