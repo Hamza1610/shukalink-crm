@@ -49,20 +49,20 @@ class VoiceMessage(Base):
     # Voice data
     audio_file_url = Column(String, nullable=False)  # S3/Cloudflare R2 URL
     audio_duration_seconds = Column(Float, nullable=False)
-    language_detected = Column(Enum("english", "hausa", "pidgin", "mixed"), default="hausa")
+    language_detected = Column(Enum("english", "hausa", "pidgin", "mixed", name="language_detected_enum"), default="hausa")
     
     # Processing status
     transcription = Column(Text, nullable=True)  # Transcribed text
     transcription_confidence = Column(Float, nullable=True)  # 0.0-1.0
-    processing_status = Column(Enum("pending", "processing", "completed", "failed"), default="pending")
+    processing_status = Column(Enum("pending", "processing", "completed", "failed", name="processing_status_enum"), default="pending")
     processed_at = Column(DateTime, nullable=True)
     
     # AI context
-    identified_intent = Column(Enum(IntentCategory), default=IntentCategory.UNKNOWN)
+    identified_intent = Column(Enum(IntentCategory, name="identified_intent_enum"), default=IntentCategory.UNKNOWN)
     entities_extracted = Column(JSON, nullable=True)  # {"crop_type": "tomatoes", "quantity": "50kg"}
     
     # Metadata
-    source = Column(Enum(MessageSource), default=MessageSource.WHATSAPP)
+    source = Column(Enum(MessageSource, name="source_enum"), default=MessageSource.WHATSAPP)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
@@ -77,7 +77,7 @@ class ChatSession(Base):
     voice_message_id = Column(String, ForeignKey("voice_messages.id"), nullable=True)
     
     # Session context
-    session_type = Column(Enum("listing_creation", "buyer_search", "advisory", "payment", "logistics"), default="general_inquiry")
+    session_type = Column(Enum("listing_creation", "buyer_search", "advisory", "payment", "logistics", name="session_type_enum"), default="general_inquiry")
     context_data = Column(JSON, nullable=True)  # Current state of multi-step conversation
     
     # Messages in session
@@ -115,8 +115,8 @@ class AdvisoryRecord(Base):
     produce_listing_id = Column(String, ForeignKey("produce_listings.id"), nullable=True)
     
     # Advisory type
-    advisory_type = Column(Enum(AdvisoryType), nullable=False)
-    crop_type = Column(Enum(CropType), nullable=True)
+    advisory_type = Column(Enum(AdvisoryType, name="advisory_type_enum"), nullable=False)
+    crop_type = Column(Enum(CropType, name="crop_type_enum"), nullable=True)
     
     # Content
     advice_given = Column(Text, nullable=False)
