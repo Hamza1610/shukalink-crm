@@ -245,8 +245,8 @@ def broadcast_notification(
     notification = NotificationModel(
         title=title,
         message=message,
-        notification_type="broadcast",
-        priority="high"
+        notification_type="BROADCAST",
+        priority="MEDIUM"
     )
     
     # If user_type is specified, send to specific user type, otherwise to all
@@ -285,7 +285,7 @@ def get_platform_activity_logs(
     # For now, we'll return basic statistics
     user_activity = db.query(User).filter(User.last_active >= cutoff_date).count()
     produce_activity = db.query(ProduceListing).filter(ProduceListing.created_at >= cutoff_date).count()
-    transaction_activity = db.query(Transaction).filter(Transaction.created_at >= cutoff_date).count()
+    transaction_activity = db.query(Transaction).filter(Transaction.matched_at >= cutoff_date).count()
     
     return {
         "period_days": days,
