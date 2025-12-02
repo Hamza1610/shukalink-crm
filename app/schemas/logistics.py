@@ -41,7 +41,7 @@ class LogisticsRequest(BaseModel):
     delivery_address: str
     pickup_datetime: Optional[datetime] = None
     special_instructions: Optional[str] = None
-    vehicle_type: Optional[str] = "motorcycle"  # motorcycle, truck, etc.
+    vehicle_type: Optional[str] = "truck"  # motorcycle, truck, etc.
     requester_id: Optional[str] = None  # Will be set by the system
 
 
