@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.db.session import SessionLocal
-from app.schemas.logistics import LogisticsRequest, LogisticsResponse
+from app.schemas.logistics import LogisticsRequest, LogisticsResponse, LogisticsRequestUpdate
 from app.crud import crud_logistics
 from app.crud import crud_transaction
 from app.api.deps import get_current_user
@@ -73,7 +73,7 @@ def get_logistics(
 @router.put("/{logistics_id}", response_model=LogisticsResponse)
 def update_logistics(
     logistics_id: str,
-    logistics_update: LogisticsRequest,  # This should actually be a different schema
+    logistics_update: LogisticsRequestUpdate,
     current_user: User = Depends(get_current_user),
     db=Depends(get_db)
 ):
@@ -95,7 +95,7 @@ def update_logistics(
         )
     
     # Update logistics
-    updated_logistics = crud_logistics.update(db, db_obj=logistics, obj_in=logistics_update.dict())
+    updated_logistics = crud_logistics.update(db, db_obj=logistics, obj_in=logistics_update.dict(exclude_unset=True))
     return updated_logistics
 
 @router.patch("/{logistics_id}/status")
