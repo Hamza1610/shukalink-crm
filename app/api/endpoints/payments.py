@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends, HTTPException, status
 from app.db.session import SessionLocal
-from app.crud import crud_transaction
+from app.crud import get_transaction, get_transactions, create_transaction, delete_transaction, update_transaction, update_transaction_status
 from app.services.payment_service import PaymentService
 from app.core.config import settings
 import hashlib
@@ -32,17 +32,18 @@ async def verify_payment_webhook(request: Request):
         )
     
     # Verify the signature (in production)
-    # expected_signature = hmac.new(
-    #     settings.PAYSTACK_WEBHOOK_SECRET.encode('utf-8'),
-    #     body,
-    #     hashlib.sha512
-    # ).hexdigest()
-    # 
-    # if not hmac.compare_digest(signature, expected_signature):
-    #     raise HTTPException(
-    #         status_code=status.HTTP_400_BAD_REQUEST,
-    #         detail="Invalid signature"
-    #     )
+    if settings.PAYSTACK_WEBHOOK_SECRET:
+        expected_signature = hmac.new(
+            settings.PAYSTACK_WEBHOOK_SECRET.encode('utf-8'),
+            body,
+            hashlib.sha512
+        ).hexdigest()
+        
+        if not hmac.compare_digest(signature, expected_signature):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid signature"
+            )
     
     # Parse the request body
     payload = await request.json()
@@ -58,8 +59,12 @@ async def verify_payment_webhook(request: Request):
         db = next(get_db())
         try:
             # Find transaction by reference (which would be the transaction ID)
-            transaction = crud_transaction.get_by_reference(db, reference)
+            transaction = get_transaction(db, reference)
             
+            # if not transaction:
+            #     # Try to find by ID if reference is not found (fallback)
+            #     transaction = get_transaction(db, id=reference)
+                
             if not transaction:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
@@ -74,10 +79,10 @@ async def verify_payment_webhook(request: Request):
                 "payment_method": "paystack"
             }
             
-            updated_transaction = crud_transaction.update(
+            updated_transaction_data = update_transaction(
                 db, 
-                db_obj=transaction, 
-                obj_in=transaction_data
+                transaction.id, 
+                transaction_data
             )
             
             return {
@@ -105,7 +110,7 @@ async def initialize_payment(transaction_id: str, db=Depends(get_db)):
     """
     Initialize a payment for a transaction
     """
-    transaction = crud_transaction.get(db, id=transaction_id)
+    transaction = get_transaction(db, transaction_id)
     
     if not transaction:
         raise HTTPException(

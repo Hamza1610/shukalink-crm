@@ -6,7 +6,7 @@ import os
 from app.core.config import settings
 from app.db.session import SessionLocal
 from app.crud import get_user_by_phone, create_user
-# from app.services.whatsapp_service import WhatsAppService
+from app.services.whatsapp_service import WhatsAppService
 from twilio.request_validator import RequestValidator
 from twilio.rest import Client
 import xml.etree.ElementTree as ET
@@ -51,17 +51,22 @@ async def whatsapp_webhook(request: Request):
     media_content_type = form_data.get("MediaContentType0", "")
     
     # Verify Twilio signature (in production)
-    # For now, we'll skip this for development
-    # validator = RequestValidator(settings.WHATSAPP_AUTH_TOKEN)
-    # signature = request.headers.get("X-Twilio-Signature", "")
-    # uri = str(request.url)
-    # if not validator.validate(uri, form_data, signature):
-    #     raise HTTPException(status_code=400, detail="Invalid Twilio signature")
+    if settings.WHATSAPP_AUTH_TOKEN:
+        validator = RequestValidator(settings.WHATSAPP_AUTH_TOKEN)
+        signature = request.headers.get("X-Twilio-Signature", "")
+        uri = str(request.url)
+        if not validator.validate(uri, form_data, signature):
+             # Try replacing http with https as a fallback for ngrok
+             if uri.startswith("http:"):
+                 uri_https = uri.replace("http:", "https:", 1)
+                 if not validator.validate(uri_https, form_data, signature):
+                     raise HTTPException(status_code=400, detail="Invalid Twilio signature")
+             else:
+                 raise HTTPException(status_code=400, detail="Invalid Twilio signature")
     
     # Get or create user
     db = next(get_db())
     try:
-        user = get_user_by_phone(db, phone_number=from_number)
         user = get_user_by_phone(db, phone_number=from_number)
         if not user:
             # Create new user
@@ -72,12 +77,11 @@ async def whatsapp_webhook(request: Request):
             }
             if profile_name:
                 user_data["village"] = profile_name  # Using village field for name temporarily
-            user = create_user(db, obj_in=user_data)
+            user = create_user(db, user_data)
         
         # Process the message with WhatsApp service
-        # whatsapp_service = WhatsAppService()
-        # response_message = whatsapp_service.process_message(user, body, media_url, media_content_type)
-        response_message = "Hello"
+        whatsapp_service = WhatsAppService()
+        response_message = whatsapp_service.process_message(user, body, media_url, media_content_type)
         return create_twilio_response(response_message)
     finally:
         db.close()
