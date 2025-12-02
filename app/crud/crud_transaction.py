@@ -1,7 +1,8 @@
 # app/crud/crud_transaction.py
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from app.models.transaction import Transaction, PaymentRecord
+from sqlalchemy import or_
+from app.models.transaction import Transaction, PaymentRecord, PaymentMethod, PaymentStatus
 from app.schemas.transaction import TransactionCreate, TransactionUpdate
 from app.schemas.payment import PaymentRecordCreate, PaymentRecordUpdate
 
@@ -25,7 +26,7 @@ def create_transaction(db: Session, transaction: TransactionCreate) -> Transacti
 
 def get_transaction(db: Session, transaction_id: str) -> Optional[Transaction]:
     """Get a transaction by ID. or produce listing as fallback"""
-    return db.query(Transaction).filter(Transaction.id == transaction_id or Transaction.produce_listing_id == transaction_id).first()
+    return db.query(Transaction).filter(or_(Transaction.id == transaction_id, Transaction.produce_listing_id == transaction_id)).first()
 
 
 def get_transactions(db: Session, skip: int = 0, limit: int = 100, buyer_id: Optional[str] = None, seller_id: Optional[str] = None) -> List[Transaction]:
@@ -72,13 +73,14 @@ def update_transaction_status(db: Session, transaction_id: str, status) -> Optio
 
 def create_payment_record(db: Session, payment_record: PaymentRecordCreate, transaction_id: str) -> PaymentRecord:
     """Create a new payment record."""
+    # SQLAlchemy's Enum columns automatically convert strings to enum members
     db_payment_record = PaymentRecord(
         transaction_id=transaction_id,
-        payment_method=payment_record.payment_method,
+        payment_method=payment_record.payment_method,  # SQLAlchemy will convert string to enum
         amount=payment_record.amount,
         currency=payment_record.currency,
         reference=payment_record.reference,
-        status=payment_record.status,
+        status=payment_record.status,  # SQLAlchemy will convert string to enum
         paystack_data=payment_record.paystack_data
     )
     db.add(db_payment_record)
