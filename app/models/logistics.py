@@ -47,7 +47,7 @@ class LogisticsRequest(Base):
     actual_cost = Column(Float, nullable=True)
     
     # Status tracking
-    status = Column(Enum(LogisticsStatus, name="status_enum"), default=LogisticsStatus.REQUESTED)
+    status = Column(Enum(LogisticsStatus, name="logistics_status_enum"), default=LogisticsStatus.REQUESTED)
     created_at = Column(DateTime, default=datetime.utcnow)
     
     # Contact information

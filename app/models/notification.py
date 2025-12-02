@@ -7,32 +7,32 @@ from app.db.base_class import Base
 from enum import Enum as PyEnum
 
 class NotificationChannel(PyEnum):
-    WHATSAPP = "whatsapp"
-    SMS = "sms"
-    IN_APP = "in_app"
-    VOICE_CALL = "voice_call"
+    WHATSAPP = "WHATSAPP"
+    SMS = "SMS"
+    IN_APP = "IN_APP"
+    VOICE_CALL = "VOICE_CALL"
 
 class NotificationType(PyEnum):
-    PAYMENT_CONFIRMATION = "payment_confirmation"
-    PRODUCE_LISTING_CONFIRMATION = "produce_listing_confirmation"
-    LOGISTICS_UPDATE = "logistics_update"
-    ADVISORY_ALERT = "advisory_alert"
-    BUYER_INTEREST = "buyer_interest"
-    PRICE_ALERT = "price_alert"
-    SYSTEM_ALERT = "system_alert"
-    BROADCAST_UPDATE = "broadcast"
+    PAYMENT_CONFIRMATION = "PAYMENT_CONFIRMATION"
+    PRODUCE_LISTING_CONFIRMATION = "PRODUCE_LISTING_CONFIRMATION"
+    LOGISTICS_UPDATE = "LOGISTICS_UPDATE"
+    ADVISORY_ALERT = "ADVISORY_ALERT"
+    BUYER_INTEREST = "BUYER_INTEREST"
+    PRICE_ALERT = "PRICE_ALERT"
+    SYSTEM_ALERT = "SYSTEM_ALERT"
+    BROADCAST = "BROADCAST"
 
 class NotificationStatus(PyEnum):
-    PENDING = "pending"
-    SENT = "sent"
-    DELIVERED = "delivered"
-    READ = "read"
-    FAILED = "failed"
+    PENDING = "PENDING"
+    SENT = "SENT"
+    DELIVERED = "DELIVERED"
+    READ = "READ"
+    FAILED = "FAILED"
 
 class NotificationPriority(PyEnum):
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
 
 class Notification(Base):
     __tablename__ = "notifications"
@@ -43,14 +43,14 @@ class Notification(Base):
     logistics_id = Column(String, ForeignKey("logistics_requests.id"), nullable=True)
     
     # Notification details
-    notification_type = Column(Enum(NotificationType, name="notification_type_enum"), default=NotificationType.BROADCAST_UPDATE)
-    channel = Column(Enum(NotificationChannel), default=NotificationChannel.WHATSAPP)
+    notification_type = Column(Enum(NotificationType, name="notification_type_enum"), default=NotificationType.BROADCAST)
+    channel = Column(Enum(NotificationChannel), default=NotificationChannel.WHATSAPP, name="notification_channel_enum")
     title = Column(Text, nullable=False)
     message = Column(Text, nullable=False)
     voice_message_url = Column(String, nullable=True)  # For voice notifications
     
     # Status tracking
-    status = Column(Enum(NotificationStatus, name="status_enum"), default=NotificationStatus.PENDING)
+    status = Column(Enum(NotificationStatus, name="notification_status_enum"), default=NotificationStatus.PENDING)
     priority = Column(Enum(NotificationPriority, name="priority_enum"), default=NotificationPriority.MEDIUM)
     sent_at = Column(DateTime, nullable=True)
     delivered_at = Column(DateTime, nullable=True)

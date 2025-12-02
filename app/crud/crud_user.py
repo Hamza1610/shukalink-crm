@@ -10,11 +10,11 @@ def create_user(db: Session, user: UserCreate) -> User:
     db_user = User(
         phone_number=user["phone_number"],
         user_type=user["user_type"],
-        whatsapp_id=user["whatsapp_id"],
-        language_preference=user["language_preference"],
-        is_verified=user["is_verified"],
-        village=user["village"],
-        location=user["location"]
+        # whatsapp_id=user["whatsapp_id"],
+        # language_preference=user["language_preference"],
+        # is_verified=user["is_verified"] ,
+        # village=user["village"],
+        # location=user["location"]
     )
     db.add(db_user)
     db.commit()
