@@ -47,7 +47,7 @@ async def initialize_payment(transaction_id: str, db: Session = Depends(get_db))
     # 4. Initialize with Paystack
     payment_service = PaymentService()
     amount_kobo = int(transaction.total_amount * 100)
-    email = f"user_{transaction.buyer_id}@agrilink.com"  # In real app, fetch buyer's email
+    email = f"user_{transaction.buyer_id}@ShukaLink.com"  # In real app, fetch buyer's email
     
     try:
         paystack_response = payment_service.initialize_transaction(

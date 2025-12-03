@@ -9,7 +9,7 @@ from app.db.base_class import Base
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="AgriLink CRM",
+    title="ShukaLink CRM",
     description="WhatsApp AI Agent for Smallholder Farmers",
     version="1.0.0",
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
@@ -29,7 +29,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():
-    return {"message": "AgriLink CRM - WhatsApp AI Agent for Smallholder Farmers"}
+    return {"message": "ShukaLink CRM - WhatsApp AI Agent for Smallholder Farmers"}
 
 @app.get("/health")
 def health_check():

@@ -68,7 +68,7 @@ class WhatsAppService:
         """
         Show simple welcome menu
         """
-        menu = f"🌾 *AgriLink CRM* 🌾\n\n"
+        menu = f"🌾 *ShukaLink CRM* 🌾\n\n"
         menu += f"Hello {user.village or 'there'}! 👋\n\n"
         menu += "I'm your AI farming assistant powered by advanced AI. I can help you with:\n\n"
         menu += "🌱 *Farming Advice*\n"

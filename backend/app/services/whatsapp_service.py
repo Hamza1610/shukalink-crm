@@ -54,7 +54,7 @@ class WhatsAppService:
     
     def _show_menu(self, user):
         """Show simple welcome menu"""
-        menu = f"🌾 *AgriLink CRM* 🌾\n\n"
+        menu = f"🌾 *ShukaLink CRM* 🌾\n\n"
         menu += f"Hello {user.village or 'there'}! 👋\n\n"
         menu += "I'm your AI assistant. I can help you with:\n\n"
         menu += "🌱 *Farming Advice* - Crops, pests, soil, fertilizer\n"

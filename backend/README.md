@@ -1,10 +1,10 @@
-# AgriLink CRM — WhatsApp AI Agent for Smallholder Farmers
+# ShukaLink CRM — WhatsApp AI Agent for Smallholder Farmers
 
-![AgriLink Architecture](https://i.imgur.com/agrilink_architecture.png)
+![ShukaLink Architecture](https://i.imgur.com/ShukaLink_architecture.png)
 
 ## 🌾 Project Overview
 
-AgriLink CRM is a WhatsApp-first AI-powered Customer Relationship Management system connecting Nigerian smallholder farmers with buyers. The system reduces post-harvest losses and increases farmer income through voice-enabled conversational interfaces in English and Hausa languages. Unlike traditional marketplaces, AgriLink functions as a complete relationship manager—maintaining transaction history, building trust between parties, and guiding users through the entire sales lifecycle via familiar WhatsApp interfaces.
+ShukaLink CRM is a WhatsApp-first AI-powered Customer Relationship Management system connecting Nigerian smallholder farmers with buyers. The system reduces post-harvest losses and increases farmer income through voice-enabled conversational interfaces in English and Hausa languages. Unlike traditional marketplaces, ShukaLink functions as a complete relationship manager—maintaining transaction history, building trust between parties, and guiding users through the entire sales lifecycle via familiar WhatsApp interfaces.
 
 **Core Value Proposition:**
 - 99% of farmers already use WhatsApp—zero learning curve
@@ -232,7 +232,7 @@ Response:
   "status": "matched",
   "total_amount": 64000,
   "created_at": "2025-11-28T15:00:00Z",
-  "payment_link": "https://paystack.com/pay/agrilink_567890"
+  "payment_link": "https://paystack.com/pay/ShukaLink_567890"
 }
 ```
 
@@ -246,7 +246,7 @@ Request (Paystack format):
 {
   "event": "charge.success",
   "data": {
-    "reference": "agrilink_567890",
+    "reference": "ShukaLink_567890",
     "amount": 6400000,
     "customer": {
       "phone": "+2348023456789"
@@ -392,7 +392,7 @@ The WhatsApp AI Agent serves as the central CRM interface with these capabilitie
 1. **Farmer Onboarding**
    ```
    Farmer: "Hi, I want to sell my crops"
-   AI Agent: "Welcome to AgriLink! I'll help you sell your produce and connect with buyers. What's your name and village?"
+   AI Agent: "Welcome to ShukaLink! I'll help you sell your produce and connect with buyers. What's your name and village?"
    ```
 
 2. **Produce Listing via Voice**
@@ -414,7 +414,7 @@ The WhatsApp AI Agent serves as the central CRM interface with these capabilitie
 
 4. **Payment Coordination**
    ```
-   AI Agent: "Perfect! I've connected you with Mallam Ibrahim. Total cost: ₦65,000. Click here to pay securely: https://paystack.com/pay/agrilink_567890"
+   AI Agent: "Perfect! I've connected you with Mallam Ibrahim. Total cost: ₦65,000. Click here to pay securely: https://paystack.com/pay/ShukaLink_567890"
    
    [After payment confirmation]
    AI Agent: "✅ Payment confirmed! Mallam Ibrahim will prepare your tomatoes for pickup tomorrow between 10AM-12PM. Driver Aliyu will contact you at 0803..."
@@ -446,8 +446,8 @@ The WhatsApp AI Agent serves as the central CRM interface with these capabilitie
 ### Local Development Setup
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/agrilink-crm.git
-cd agrilink-crm
+git clone https://github.com/yourusername/ShukaLink-crm.git
+cd ShukaLink-crm
 
 # Create virtual environment
 python -m venv venv
@@ -521,7 +521,7 @@ APP_DEBUG=true
 SECRET_KEY=your_strong_secret_key
 
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/agrilink
+DATABASE_URL=postgresql://user:password@localhost:5432/ShukaLink
 
 # WhatsApp Integration
 WHATSAPP_ACCOUNT_SID=your_twilio_sid
@@ -546,7 +546,7 @@ TWILIO_PHONE_NUMBER=+1234567890
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
 AWS_REGION=af-south-1
-S3_BUCKET_NAME=agrilink-recordings
+S3_BUCKET_NAME=ShukaLink-recordings
 
 # Vector Database
 CHROMADB_PATH=./data/chromadb
@@ -614,7 +614,7 @@ class Relationship(Base):
 
 ---
 
-**AgriLink CRM is proudly built with open-source technologies and designed for real-world impact in Nigerian agriculture.** 
+**ShukaLink CRM is proudly built with open-source technologies and designed for real-world impact in Nigerian agriculture.** 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)

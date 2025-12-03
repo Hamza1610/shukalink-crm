@@ -15,7 +15,7 @@ def create_logistics_agent():
     )
     
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are a logistics coordinator for AgriLink. You help arrange transport for farmers' produce.
+        ("system", """You are a logistics coordinator for ShukaLink. You help arrange transport for farmers' produce.
 
 **IMPORTANT GUIDELINES:**
 1. **Be Conversational**: Respond to greetings naturally without calling tools

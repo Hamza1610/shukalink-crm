@@ -14,7 +14,7 @@ from unittest.mock import Mock
 
 def test_agent():
     print("=" * 60)
-    print("Testing AgriLink Multi-Agent System")
+    print("Testing ShukaLink Multi-Agent System")
     print("=" * 60)
     
     # Create a mock user

@@ -25,7 +25,7 @@ def create_supervisor_node():
     )
     
     system_prompt = (
-        "You are a supervisor for AgriLink CRM that routes farmer inquiries.\n"
+        "You are a supervisor for ShukaLink CRM that routes farmer inquiries.\n"
         "Analyze the user's FIRST message to determine the topic:\n"
         "- Advisory: Farming advice, crops, pests, diseases, soil, fertilizer\n"
         "- Logistics: Transport, delivery, pickup, trucks\n"
