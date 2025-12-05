@@ -10,21 +10,24 @@ import {
     Receipt,
     Users,
     Truck,
+    MessageSquare,
     LogOut,
     Menu,
     X,
+    PanelLeftClose,
 } from "lucide-react";
 import { useState } from "react";
 
 const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Chat", href: "/chat", icon: MessageSquare },
     { name: "Produce", href: "/dashboard/produce", icon: Package },
     { name: "Transactions", href: "/dashboard/transactions", icon: Receipt },
     { name: "Relationships", href: "/dashboard/relationships", icon: Users },
     { name: "Logistics", href: "/dashboard/logistics", icon: Truck },
 ];
 
-export function Sidebar() {
+export function Sidebar({ isCollapsed, onToggleCollapse }: { isCollapsed?: boolean; onToggleCollapse?: () => void }) {
     const pathname = usePathname();
     const { user, logout } = useAuth();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -61,8 +64,8 @@ export function Sidebar() {
                             href={item.href}
                             onClick={() => setMobileMenuOpen(false)}
                             className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive
-                                    ? "bg-green-50 text-green-700"
-                                    : "text-gray-700 hover:bg-gray-100"
+                                ? "bg-green-50 text-green-700"
+                                : "text-gray-700 hover:bg-gray-100"
                                 }`}
                         >
                             <Icon className="h-5 w-5" />
@@ -73,7 +76,7 @@ export function Sidebar() {
             </nav>
 
             {/* Logout */}
-            <div className="border-t border-gray-200 p-3">
+            <div className="border-t border-gray-200 p-3 space-y-2">
                 <button
                     onClick={logout}
                     className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
@@ -81,6 +84,18 @@ export function Sidebar() {
                     <LogOut className="h-5 w-5" />
                     Logout
                 </button>
+
+                {/* Collapse Sidebar Toggle - Desktop only */}
+                {onToggleCollapse && (
+                    <button
+                        onClick={onToggleCollapse}
+                        className="hidden lg:flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
+                        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    >
+                        <PanelLeftClose className="h-5 w-5" />
+                        {isCollapsed ? "Expand" : "Collapse"}
+                    </button>
+                )}
             </div>
         </>
     );
