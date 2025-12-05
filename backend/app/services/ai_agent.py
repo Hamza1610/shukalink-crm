@@ -18,19 +18,38 @@ class AIAgent:
             print(f"Error initializing agent graph: {e}")
             self.graph = None
     
-    async def process_query(self, query: str, user: Optional[User] = None):
+    async def process_query(self, query: str, user: Optional[User] = None, conversation_history: Optional[list] = None):
         """
         Process a user query and return an appropriate response (async with timeout)
+        
+        Args:
+            query: The user's current message
+            user: User object with profile information
+            conversation_history: List of previous messages
         """
         if not self.graph:
             return "System is currently initializing or missing configuration (GROQ_API_KEY). Please try again later."
 
-        from langchain_core.messages import HumanMessage
+        from langchain_core.messages import HumanMessage, AIMessage, AIMessage
         import asyncio
+        
+        # Build message list with conversation history
+        messages = []
+        
+        # Add previous conversation messages if provided
+        if conversation_history:
+            for msg in conversation_history:
+                if msg.get("role") == "user":
+                    messages.append(HumanMessage(content=msg["content"]))
+                elif msg.get("role") in ["assistant", "ai"]:
+                    messages.append(AIMessage(content=msg["content"]))
+        
+        # Add current query
+        messages.append(HumanMessage(content=query))
         
         # Prepare initial state
         initial_state = {
-            "messages": [HumanMessage(content=query)],
+            "messages": messages,
             "next": "",
             "user_id": user.id if user else "anonymous",
             "user_info": {
