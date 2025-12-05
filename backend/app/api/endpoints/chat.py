@@ -136,6 +136,18 @@ async def websocket_chat_endpoint(
         db.close()
 
 
+
+
+def get_conversation_history(session: ChatSession, limit: int = 20) -> list:
+    """Extract conversation history from session's context_data"""
+    if not session.context_data:
+        return []
+    
+    messages = session.context_data.get("messages", [])
+    # Return last 'limit' messages
+    return messages[-limit:] if len(messages) > limit else messages
+
+
 async def handle_text_message(websocket: WebSocket, user: User, message_data: dict, db: Session):
     """Handle incoming text message and send AI response"""
     content = message_data.get("content", "").strip()
@@ -182,12 +194,39 @@ async def handle_text_message(websocket: WebSocket, user: User, message_data: di
             "timestamp": datetime.utcnow().isoformat()
         }, user.id)
     
-    # Process message with AI agent
+    # Get conversation history from session
+    conversation_history = get_conversation_history(session)
+    
+    # Process message with AI agent (with context)
     try:
-        logger.info(f"Processing message for session {session_id}")
-        ai_response = await ai_agent.process_query(content, user=user)
+        logger.info(f"Processing message for session {session_id} with {len(conversation_history)} previous messages")
+        ai_response = await ai_agent.process_query(content, user=user, conversation_history=conversation_history)
         
-        # Update session
+        # Update conversation history in context_data
+        if not session.context_data:
+            session.context_data = {"messages": []}
+        elif "messages" not in session.context_data:
+            session.context_data["messages"] = []
+        
+        # Add user message to history
+        session.context_data["messages"].append({
+            "role": "user",
+            "content": content,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        
+        # Add AI response to history  
+        session.context_data["messages"].append({
+            "role": "assistant",
+            "content": ai_response,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        
+        # Mark context_data as modified for SQLAlchemy to track changes
+        from sqlalchemy.orm.attributes import flag_modified
+        flag_modified(session, "context_data")
+        
+        # Update session with latest message (for backward compatibility)
         session.user_message = content
         session.ai_response = ai_response
         db.commit()
@@ -293,6 +332,44 @@ async def delete_chat_session(
     db.commit()
     
     return {"message": "Session deleted successfully", "session_id": session_id}
+
+
+
+
+@router.get("/active-session")
+async def get_active_session(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get or create user's active chat session with full message history"""
+    # Get most recent session
+    session = db.query(ChatSession).filter(
+        ChatSession.user_id == current_user.id
+    ).order_by(ChatSession.created_at.desc()).first()
+    
+    if not session:
+        # Create new session
+        session_id = f"chat_{uuid4().hex[:8]}"
+        session = ChatSession(
+            id=session_id,
+            user_id=current_user.id,
+            user_message="",
+            ai_response="",
+            session_type="advisory",
+            context_data={"messages": []}
+        )
+        db.add(session)
+        db.commit()
+    
+    # Get conversation history
+    messages = get_conversation_history(session)
+    
+    return {
+        "session_id": session.id,
+        "messages": messages,
+        "created_at": session.created_at,
+        "message_count": len(messages)
+    }
 
 
 @router.post("/voice")
