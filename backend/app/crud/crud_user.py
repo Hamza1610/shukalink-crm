@@ -24,7 +24,7 @@ def create_user(db: Session, user: UserCreate) -> User:
 
 def get_user(db: Session, user_id: str) -> Optional[User]:
     """Get a user by ID."""
-    print("DB:", db, "User_Id", user_id)
+
     return db.query(User).filter(User.id == user_id).first()
 
 

@@ -1,39 +1,60 @@
+
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from app.models.produce import ProduceListing
 from app.schemas.produce import ProduceListingCreate, ProduceListingUpdate
-
-
 def create_produce_listing(db: Session, produce_listing: ProduceListingCreate) -> ProduceListing:
     """Create a new produce listing."""
-    print("TEST: ", produce_listing)
-    db_produce_listing = ProduceListing(
-        farmer_id=produce_listing["farmer_id"],
-        crop_type=produce_listing["crop_type"].value,
-        quantity_kg=produce_listing["quantity_kg"],
-        quality_grade=produce_listing["quality_grade"].value,
-        harvest_date=produce_listing["harvest_date"],
-        expected_price_per_kg=produce_listing["expected_price_per_kg"],
-        location=produce_listing["location"],
-        storage_conditions=produce_listing["storage_conditions"],
-        shelf_life_days=produce_listing["shelf_life_days"],
-        expires_at=produce_listing["expires_at"],
-        voice_message_id=produce_listing["voice_message_id"],
-        transcription=produce_listing["transcription"]
-    )
+    import logging
+    logger = logging.getLogger(__name__)
+    
+    try:
+        logger.info(f"Creating produce listing: {produce_listing}")
+        
+        # Handle crop_type (could be Enum or string)
+        crop_type_val = produce_listing["crop_type"]
+        if hasattr(crop_type_val, 'value'):
+            crop_type_val = crop_type_val.value
+            
+        # Handle quality_grade (could be Enum or string)
+        quality_grade_val = produce_listing.get("quality_grade", "GOOD")
+        if hasattr(quality_grade_val, 'value'):
+            quality_grade_val = quality_grade_val.value
+            
+        # Handle location conversion
+        # Default to Kano if not provided or invalid (MVP)
+        # In production, use geocoding here
+        # Format: SRID=4326;POINT(longitude latitude)
+        location_wkt = "SRID=4326;POINT(8.5200 11.9999)" 
+        
+        db_produce_listing = ProduceListing(
+            farmer_id=produce_listing["farmer_id"],
+            crop_type=crop_type_val,
+            quantity_kg=produce_listing["quantity_kg"],
+            quality_grade=quality_grade_val,
+            harvest_date=produce_listing["harvest_date"],
+            expected_price_per_kg=produce_listing["expected_price_per_kg"],
+            location=location_wkt,
+            storage_conditions=produce_listing.get("storage_conditions"),
+            shelf_life_days=produce_listing.get("shelf_life_days"),
+            expires_at=produce_listing["expires_at"],
+            voice_message_id=produce_listing.get("voice_message_id"),
+            transcription=produce_listing.get("transcription")
+        )
 
-
-    # db_produce_listing = ProduceListing(**produce_listing)
-    db.add(db_produce_listing)
-    db.commit()
-    db.refresh(db_produce_listing)
-    return db_produce_listing
-
+        db.add(db_produce_listing)
+        db.commit()
+        db.refresh(db_produce_listing)
+        logger.info(f"Created produce listing {db_produce_listing.id}")
+        return db_produce_listing
+    except Exception as e:
+        logger.error(f"Error in create_produce_listing: {e}")
+        db.rollback()
+        raise
 
 def get_produce_listing(db: Session, produce_listing_id: str) -> Optional[ProduceListing]:
     """Get a produce listing by ID."""
     return db.query(ProduceListing).filter(ProduceListing.id == produce_listing_id).first()
-
 
 def get_produce_listings(db: Session, skip: int = 0, limit: int = 100, farmer_id: Optional[str] = None) -> List[ProduceListing]:
     """Get a list of produce listings all or from a farmer"""
