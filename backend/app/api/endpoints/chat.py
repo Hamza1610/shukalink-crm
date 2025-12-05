@@ -483,8 +483,35 @@ async def upload_voice_note(
                 "session_id": session_id
             }, current_user.id)
         
-        # Process with AI agent
-        ai_response = await ai_agent.process_query(transcription_result, user=current_user)
+        # Get conversation history from session
+        conversation_history = get_conversation_history(session)
+        
+        # Process with AI agent (with context)
+        ai_response = await ai_agent.process_query(transcription_result, user=current_user, conversation_history=conversation_history)
+        
+        # Update conversation history in context_data
+        if not session.context_data:
+            session.context_data = {"messages": []}
+        elif "messages" not in session.context_data:
+            session.context_data["messages"] = []
+        
+        # Add transcribed message to history
+        session.context_data["messages"].append({
+            "role": "user",
+            "content": transcription_result,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        
+        # Add AI response to history
+        session.context_data["messages"].append({
+            "role": "assistant",
+            "content": ai_response,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        
+        # Mark context_data as modified for SQLAlchemy
+        from sqlalchemy.orm.attributes import flag_modified
+        flag_modified(session, "context_data")
         
         # Update session
         session.user_message = transcription_result
