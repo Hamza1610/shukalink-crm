@@ -372,6 +372,34 @@ async def get_active_session(
     }
 
 
+
+
+@router.get("/sessions/{session_id}/history")
+async def get_session_history(
+    session_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Get full message history for a specific session"""
+    session = db.query(ChatSession).filter(
+        ChatSession.id == session_id,
+        ChatSession.user_id == current_user.id
+    ).first()
+    
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    # Get conversation history
+    messages = get_conversation_history(session, limit=1000)  # Get all messages
+    
+    return {
+        "session_id": session.id,
+        "messages": messages,
+        "created_at": session.created_at.isoformat(),
+        "updated_at": session.updated_at.isoformat() if session.updated_at else session.created_at.isoformat(),
+        "message_count": len(messages)
+    }
+
 @router.post("/voice")
 async def upload_voice_note(
     file: UploadFile = File(...),
