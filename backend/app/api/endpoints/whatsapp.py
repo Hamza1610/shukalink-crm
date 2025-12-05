@@ -81,7 +81,7 @@ async def whatsapp_webhook(request: Request):
         
         # Process the message with WhatsApp service
         whatsapp_service = WhatsAppService()
-        response_message = whatsapp_service.process_message(user, body, media_url, media_content_type)
+        response_message = await whatsapp_service.process_message(user, body, media_url, media_content_type)
         return create_twilio_response(response_message)
     finally:
         db.close()
