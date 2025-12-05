@@ -299,16 +299,16 @@ async def list_chat_sessions(
     """List all chat sessions for the current user"""
     sessions = db.query(ChatSession).filter(
         ChatSession.user_id == current_user.id
-    ).order_by(ChatSession.created_at.desc()).limit(10).all()  # Limit to recent 10
+    ).order_by(ChatSession.created_at.desc()).all()
     
     return [
-        ChatSessionSummary(
-            session_id=s.id,
-            created_at=s.created_at,
-            last_activity=s.updated_at,
-            message_count=2,  # Simplified for now
-            language_used=None
-        )
+        {
+            "session_id": s.id,
+            "created_at": s.created_at.isoformat(),
+            "updated_at": s.updated_at.isoformat() if s.updated_at else s.created_at.isoformat(),
+            "message_count": len(s.context_data.get("messages", [])) if s.context_data else 0,
+            "preview": s.user_message[:60] + "..." if s.user_message and len(s.user_message) > 60 else (s.user_message or "New chat")
+        }
         for s in sessions
     ]
 
