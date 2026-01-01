@@ -24,8 +24,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.staticfiles import StaticFiles
+import os
+
+# Create static dir if not exists
+os.makedirs("static/produce_images", exist_ok=True)
+
 # Include API router
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 def read_root():
