@@ -60,6 +60,9 @@ class ProduceListing(Base):
     voice_message_id = Column(String, ForeignKey("voice_messages.id"), nullable=True)
     transcription = Column(Text, nullable=True)  # Full text of voice listing
     
+    # Media
+    images = Column(JSON, nullable=True)  # List of image URLs
+    
     # Relationships
     farmer = relationship("User", back_populates="produce_listings")
     voice_message = relationship("VoiceMessage")

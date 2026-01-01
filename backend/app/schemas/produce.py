@@ -41,6 +41,7 @@ class ProduceListingCreate(BaseModel):
     expires_at: datetime
     voice_message_id: Optional[str] = None
     transcription: Optional[str] = None
+    images: Optional[List[str]] = None
 
 
 class ProduceListingUpdate(BaseModel):
@@ -56,6 +57,7 @@ class ProduceListingUpdate(BaseModel):
     voice_message_id: Optional[str] = None
     transcription: Optional[str] = None
     status: Optional[ListingStatus] = None
+    images: Optional[List[str]] = None
 
 
 class ProduceListingResponse(BaseModel):
@@ -73,6 +75,7 @@ class ProduceListingResponse(BaseModel):
     expires_at: datetime
     voice_message_id: Optional[str] = None
     transcription: Optional[str] = None
+    images: Optional[List[str]] = None
 
 
 class ProduceSearch(BaseModel):
