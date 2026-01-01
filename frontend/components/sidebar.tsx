@@ -15,6 +15,7 @@ import {
     Menu,
     X,
     PanelLeftClose,
+    Store,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,6 +23,7 @@ const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Chat", href: "/chat", icon: MessageSquare },
     { name: "Produce", href: "/dashboard/produce", icon: Package },
+    { name: "Marketplace", href: "/dashboard/marketplace", icon: Store },
     { name: "Transactions", href: "/dashboard/transactions", icon: Receipt },
     { name: "Relationships", href: "/dashboard/relationships", icon: Users },
     { name: "Logistics", href: "/dashboard/logistics", icon: Truck },
