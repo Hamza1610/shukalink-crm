@@ -21,11 +21,8 @@ def create_produce_listing(db: Session, produce_listing: ProduceListingCreate) -
         if hasattr(quality_grade_val, 'value'):
             quality_grade_val = quality_grade_val.value
             
-        # Handle location conversion
-        # Default to Kano if not provided or invalid (MVP)
-        # In production, use geocoding here
-        # Format: SRID=4326;POINT(longitude latitude)
-        location_wkt = "SRID=4326;POINT(8.5200 11.9999)" 
+        # Use provided location or default
+        location = produce_listing.get("location", "Kano, Nigeria")
         
         db_produce_listing = ProduceListing(
             farmer_id=produce_listing["farmer_id"],
@@ -34,7 +31,7 @@ def create_produce_listing(db: Session, produce_listing: ProduceListingCreate) -
             quality_grade=quality_grade_val,
             harvest_date=produce_listing["harvest_date"],
             expected_price_per_kg=produce_listing["expected_price_per_kg"],
-            location=location_wkt,
+            location=location,
             storage_conditions=produce_listing.get("storage_conditions"),
             shelf_life_days=produce_listing.get("shelf_life_days"),
             expires_at=produce_listing["expires_at"],
@@ -77,7 +74,7 @@ def search_produce_listings(
     query = db.query(ProduceListing)
 
     if crop_type:
-        query = query.filter(ProduceListing.crop_type == crop_type)
+        query = query.filter(ProduceListing.crop_type.ilike(f"%{crop_type}%"))
 
     if min_quantity:
         query = query.filter(ProduceListing.quantity_kg >= min_quantity)
@@ -123,10 +120,6 @@ def update_produce_listing(db: Session, produce_listing_id: str, produce_listing
         # Convert Python Enum -> string
         if isinstance(value, Enum):
             value = value.value
-
-        # Convert location WKT to EWKT
-        if field == "location":
-            value = f"SRID=4326;{value}"
 
         setattr(db_produce_listing, field, value)
 

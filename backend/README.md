@@ -24,7 +24,7 @@ ShukaLink CRM is a WhatsApp-first AI-powered Customer Relationship Management sy
 ### AI Layer
 - **Llama 3 8B Instruct** (Ollama): Core reasoning engine fine-tuned for agricultural context
 - **Whisper-large-v3** (fine-tuned on Hausa): Voice transcription for local dialects
-- **Silero VAD**: Voice activity detection for cleaner audio processing
+- **Whisper**: Voice activity detection for cleaner audio processing
 - **LangGraph**: Stateful workflow management for multi-step CRM operations
 
 ### Integration Services
@@ -34,7 +34,7 @@ ShukaLink CRM is a WhatsApp-first AI-powered Customer Relationship Management sy
 - **OpenStreetMap Nominatim**: Free geocoding service
 
 ### Infrastructure
-- **Fly.io**: Free tier hosting for backend services
+- **Render**: Free tier hosting for backend services
 - **AWS S3** (free tier): Storage for voice recordings
 - **Cloudflare R2**: Free object storage for media files
 - **Docker**: Containerization for consistent deployment
