@@ -27,7 +27,7 @@ app.add_middleware(
 from fastapi.staticfiles import StaticFiles
 import os
 
-# Create static dir if not exists
+# Create static dir if not exists  from "static/produce_images"
 os.makedirs("static/produce_images", exist_ok=True)
 
 # Include API router
